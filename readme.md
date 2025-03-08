@@ -116,21 +116,3 @@ project-structure/
 7. **Data Validation**: Form validation on both client and server sides
 8. **Error Handling**: Comprehensive error messaging and handling
 9. **Default Admin Account**: Automatically created for convenience
-
-## Recording Instructions
-
-To record your screen showcasing both code and UI:
-
-1. **Windows**: Use the built-in Windows Game Bar (Win+G) or install OBS Studio
-2. **Mac**: Use QuickTime Player or install OBS Studio
-3. **Linux**: Install OBS Studio or SimpleScreenRecorder
-
-Record the following:
-
-1. Project structure and code overview
-2. Starting the application
-3. Admin login and adding a new user
-4. Logging out and logging in as the newly created user
-5. Showing the welcome message and user dashboard
-
-Upload the recording to Google Drive and share the link as required in the submission guidelines.
