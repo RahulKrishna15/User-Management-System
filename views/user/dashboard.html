@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - CodeTikki</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>User Dashboard</h1>
+      <div class="user-info">
+        <span id="userInfo"></span>
+        <button id="logoutBtn" class="btn btn-danger btn-sm">Logout</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="welcome-card">
+        <div class="welcome-message" id="welcomeMessage"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Your Profile</h2>
+        </div>
+        <div class="card-body">
+          <div class="profile-info">
+            <div class="profile-item">
+              <strong>Name:</strong>
+              <span id="profileName"></span>
+            </div>
+            <div class="profile-item">
+              <strong>Email:</strong>
+              <span id="profileEmail"></span>
+            </div>
+            <div class="profile-item">
+              <strong>Role:</strong>
+              <span id="profileRole"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if user is logged in
+      fetch('/user/info')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Not authenticated');
+          }
+          return response.json();
+        })
+        .then(user => {
+          // Set welcome message
+          document.getElementById('welcomeMessage').innerHTML = `
+            <h2>Welcome ${user.name} to CodeTikki</h2>
+            <p>We're glad to have you here!</p>
+          `;
+
+          // Set user info in header
+          document.getElementById('userInfo').textContent = `${user.name} (${user.role})`;
+
+          // Set profile info
+          document.getElementById('profileName').textContent = user.name;
+          document.getElementById('profileEmail').textContent = user.email;
+          document.getElementById('profileRole').textContent = user.role;
+        })
+        .catch(() => {
+          window.location.href = '/user/login';
+        });
+
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        fetch('/user/logout')
+          .then(() => {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+          })
+          .catch(error => console.error('Logout error:', error));
+      });
+    });
+  </script>
+</body>
+
+</html>

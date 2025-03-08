@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - CodeTikki</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Admin Dashboard</h1>
+      <div class="user-info">
+        <span id="adminName"></span>
+        <button id="logoutBtn" class="btn btn-danger btn-sm">Logout</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-header">
+          <h2>User Management</h2>
+          <a href="/admin/add-user" class="btn btn-primary">Add New User</a>
+        </div>
+        <div class="card-body">
+          <div class="users-table-container">
+            <table id="usersTable" class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Created At</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- User data will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if admin is logged in
+      fetch('/user/info')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Not authenticated');
+          }
+          return response.json();
+        })
+        .then(user => {
+          if (user.role !== 'admin') {
+            window.location.href = '/user/login';
+            return;
+          }
+          document.getElementById('adminName').textContent = `Welcome, ${user.name}`;
+          loadUsers();
+        })
+        .catch(() => {
+          window.location.href = '/user/login';
+        });
+
+      // Load users
+      function loadUsers() {
+        fetch('/admin/users')
+          .then(response => response.json())
+          .then(users => {
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.role}</td>
+                <td>${new Date(user.created_at).toLocaleString()}</td>
+              `;
+              tbody.appendChild(row);
+            });
+          })
+          .catch(error => console.error('Error loading users:', error));
+      }
+
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        fetch('/user/logout')
+          .then(() => {
+            window.location.href = '/';
+          })
+          .catch(error => console.error('Logout error:', error));
+      });
+    });
+  </script>
+</body>
+
+</html>

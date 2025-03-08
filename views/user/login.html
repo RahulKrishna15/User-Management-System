@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login - CodeTikki</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>User Login</h1>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-header">
+          <h2>Login to your account</h2>
+          <a href="/" class="btn btn-secondary btn-sm">Back to Home</a>
+        </div>
+        <div class="card-body">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required>
+            </div>
+            <div class="alert" id="loginAlert" style="display: none;"></div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Login form submit
+      document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const formData = {
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value
+        };
+        
+        fetch('/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          const alert = document.getElementById('loginAlert');
+          
+          if (data.success) {
+            alert.textContent = 'Login successful! Redirecting...';
+            alert.className = 'alert alert-success';
+            
+            // Store token if needed
+            localStorage.setItem('token', data.token);
+            
+            // Redirect based on role
+            if (data.user.role === 'admin') {
+              setTimeout(() => { window.location.href = '/admin/dashboard'; }, 1000);
+            } else {
+              setTimeout(() => { window.location.href = '/user/dashboard'; }, 1000);
+            }
+          } else {
+            alert.textContent = data.message || 'Invalid credentials';
+            alert.className = 'alert alert-danger';
+          }
+          
+          alert.style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Login error:', error);
+          const alert = document.getElementById('loginAlert');
+          alert.textContent = 'Server error, please try again';
+          alert.className = 'alert alert-danger';
+          alert.style.display = 'block';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
