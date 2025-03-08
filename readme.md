@@ -104,15 +104,3 @@ project-structure/
 ├── package.json     # Project dependencies
 └── .env             # Environment variables
 ```
-
-## Additional Features Beyond Basic Requirements
-
-1. **Role-Based Access Control**: Separate admin and user roles with appropriate permissions
-2. **Responsive Design**: Works well on both desktop and mobile devices
-3. **Password Hashing**: Security enhanced with bcrypt password hashing
-4. **JWT Authentication**: Token-based authentication for API endpoints
-5. **Session Management**: User sessions for improved security
-6. **User Profile Page**: Additional profile information display
-7. **Data Validation**: Form validation on both client and server sides
-8. **Error Handling**: Comprehensive error messaging and handling
-9. **Default Admin Account**: Automatically created for convenience
